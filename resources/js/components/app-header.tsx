@@ -86,7 +86,7 @@ export function AppHeader({ breadcrumbs = [] }: Props) {
                                 </Button>
                             </SheetTrigger>
                             <SheetContent
-                                side="left"
+                                side="right"
                                 className="flex h-full w-64 flex-col items-stretch justify-between bg-sidebar"
                             >
                                 <SheetTitle className="sr-only">

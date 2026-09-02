@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(NigerianPropertySeeder::class);
+        $this->call(PropertyTypeDemoSeeder::class);
     }
 }

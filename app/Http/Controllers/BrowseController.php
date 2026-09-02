@@ -36,6 +36,36 @@ class BrowseController extends Controller
             $query->where('category', $request->category);
         }
 
+        // Advanced Search: Bedrooms
+        if ($request->filled('bedrooms')) {
+            $query->whereHas('units', function ($q) use ($request) {
+                if (str_ends_with($request->bedrooms, '+')) {
+                    $q->where('bedrooms', '>=', (int) str_replace('+', '', $request->bedrooms));
+                } else {
+                    $q->where('bedrooms', (int) $request->bedrooms);
+                }
+            });
+        }
+
+        // Advanced Search: Bathrooms
+        if ($request->filled('bathrooms')) {
+            $query->whereHas('units', function ($q) use ($request) {
+                if (str_ends_with($request->bathrooms, '+')) {
+                    $q->where('bathrooms', '>=', (int) str_replace('+', '', $request->bathrooms));
+                } else {
+                    $q->where('bathrooms', (int) $request->bathrooms);
+                }
+            });
+        }
+
+        // Advanced Search: Max Price
+        if ($request->filled('max_price')) {
+            $query->whereHas('units', function ($q) use ($request) {
+                $q->where('rent_price', '<=', (float) $request->max_price)
+                  ->orWhere('sale_price', '<=', (float) $request->max_price);
+            });
+        }
+
         // Geolocation-based sorting using Haversine formula
         $userLocation = null;
         if ($request->filled('lat') && $request->filled('lng')) {
@@ -57,7 +87,7 @@ class BrowseController extends Controller
 
         return Inertia::render('browse/index', [
             'properties' => $properties,
-            'filters' => $request->only(['location', 'type', 'category']),
+            'filters' => $request->only(['location', 'type', 'category', 'bedrooms', 'bathrooms', 'max_price']),
             'userLocation' => $userLocation,
         ]);
     }

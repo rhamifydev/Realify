@@ -18,33 +18,33 @@ import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard(),
+        title: 'Overview',
+        href: '/tenant/dashboard',
         icon: LayoutGrid,
     },
     {
-        title: 'Admin Disputes',
-        href: '/admin/disputes',
-        icon: ShieldAlert,
+        title: 'Saved Listings',
+        href: '/tenant/saved',
+        icon: Home, // using Home for now, will fix to Heart later if needed
     },
     {
-        title: 'My Properties',
-        href: '/properties',
-        icon: Home,
-    },
-    {
-        title: 'Mandates',
-        href: '/mandates',
-        icon: FileSignature,
-    },
-    {
-        title: 'Escrow',
-        href: '/escrow',
+        title: 'My Inspections',
+        href: '/tenant/inspections',
         icon: ShieldCheck,
     },
     {
-        title: 'KYC Verification',
-        href: '/kyc',
+        title: 'Active Applications',
+        href: '/tenant/applications',
+        icon: FileSignature,
+    },
+    {
+        title: 'Payment History',
+        href: '/tenant/payments',
+        icon: ShieldAlert, // using ShieldAlert for now
+    },
+    {
+        title: 'Disputes',
+        href: '/tenant/disputes',
         icon: UserCheck,
     },
 ];

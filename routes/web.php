@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', [\App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
+Route::get('/cities', [\App\Http\Controllers\CitiesController::class, 'index'])->name('cities.index');
+Route::get('/types', [\App\Http\Controllers\PropertyTypeController::class, 'index'])->name('types.index');
+Route::get('/types/{type}', [\App\Http\Controllers\PropertyTypeController::class, 'show'])->name('types.show');
 
 Route::get('/browse', [\App\Http\Controllers\BrowseController::class, 'index'])->name('browse.index');
 Route::get('/browse/{property}', [\App\Http\Controllers\BrowseController::class, 'show'])->name('browse.show');
@@ -11,7 +14,17 @@ Route::post('/browse/{property}/book', [\App\Http\Controllers\BrowseController::
     ->name('browse.book');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::inertia('dashboard', 'tenant/dashboard')->name('dashboard');
+
+    // Tenant Dashboard Routes
+    Route::prefix('tenant')->name('tenant.')->group(function () {
+        Route::inertia('dashboard', 'tenant/dashboard')->name('dashboard');
+        Route::inertia('applications', 'tenant/applications/index')->name('applications');
+        Route::inertia('inspections', 'tenant/inspections/index')->name('inspections');
+        Route::inertia('saved', 'tenant/saved/index')->name('saved');
+        Route::inertia('payments', 'tenant/payments/index')->name('payments');
+        Route::inertia('disputes', 'tenant/disputes/index')->name('disputes');
+    });
     Route::get('/kyc', [\App\Http\Controllers\KycController::class, 'index'])->name('kyc.index');
     Route::post('/kyc', [\App\Http\Controllers\KycController::class, 'update'])->name('kyc.update');
 
