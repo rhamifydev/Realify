@@ -1,7 +1,7 @@
+import { useState, useEffect, useRef } from 'react';
 import { Head, Link, usePage, router } from '@inertiajs/react';
 import { dashboard, login, register } from '@/routes';
-import { ShieldCheck, MapPin, Search, Home as HomeIcon, CheckCircle2, ChevronRight, Lock, Star, Building2, Wallet, Heart, Menu, ArrowRight, TrendingUp, Award, Users, Grid2X2, FileText, UserRound, Truck } from 'lucide-react';
-import { useState } from 'react';
+import { ShieldCheck, MapPin, Search, Home as HomeIcon, CheckCircle2, ChevronRight, ChevronLeft, Lock, Building2, Wallet, Heart, Menu, ArrowRight, TrendingUp, FileText, UserRound, Truck, BadgeCheck, Sparkles, Star, Quote, Mail, Phone, Send, Twitter, Instagram, Linkedin, Facebook, Globe, CreditCard } from 'lucide-react';
 import {
     Sheet,
     SheetContent,
@@ -9,8 +9,9 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
+
 export default function Welcome({ topPlaces = [], featuredListings = [] }: { topPlaces?: any[], featuredListings?: any[] }) {
-    const { auth } = usePage().props as any;
+const { auth } = usePage().props as any;
 
     const [searchLocation, setSearchLocation] = useState('');
     const [searchType, setSearchType] = useState('');
@@ -21,6 +22,98 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
             location: searchLocation,
             ...(searchType ? { type: searchType } : {})
         });
+    };
+
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [isPaused, setIsPaused] = useState(false);
+
+    useEffect(() => {
+        const container = scrollRef.current;
+        if (!container) return;
+
+        let animationFrameId: number;
+        let lastTime = performance.now();
+
+        const scrollLoop = (time: number) => {
+            const delta = time - lastTime;
+            lastTime = time;
+
+            if (!isPaused && container) {
+                container.scrollLeft += delta * 0.05; // ~50px/sec smooth glide
+
+                const halfWidth = container.scrollWidth / 2;
+                if (container.scrollLeft >= halfWidth) {
+                    container.scrollLeft -= halfWidth;
+                } else if (container.scrollLeft <= 0) {
+                    container.scrollLeft += halfWidth;
+                }
+            }
+
+            animationFrameId = requestAnimationFrame(scrollLoop);
+        };
+
+        animationFrameId = requestAnimationFrame(scrollLoop);
+
+        return () => {
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, [isPaused]);
+
+    const handleManualScroll = (direction: 'left' | 'right') => {
+        if (!scrollRef.current) return;
+        setIsPaused(true);
+        const scrollAmount = 310;
+        scrollRef.current.scrollBy({
+            left: direction === 'left' ? -scrollAmount : scrollAmount,
+            behavior: 'smooth'
+        });
+        setTimeout(() => setIsPaused(false), 2000);
+    };
+
+    const testimonialsRef = useRef<HTMLDivElement>(null);
+    const [isTestimonialsPaused, setIsTestimonialsPaused] = useState(false);
+
+    useEffect(() => {
+        const container = testimonialsRef.current;
+        if (!container) return;
+
+        let animationFrameId: number;
+        let lastTime = performance.now();
+
+        const scrollLoop = (time: number) => {
+            const delta = time - lastTime;
+            lastTime = time;
+
+            if (!isTestimonialsPaused && container) {
+                container.scrollLeft += delta * 0.045; // ~45px/sec smooth glide
+
+                const halfWidth = container.scrollWidth / 2;
+                if (container.scrollLeft >= halfWidth) {
+                    container.scrollLeft -= halfWidth;
+                } else if (container.scrollLeft <= 0) {
+                    container.scrollLeft += halfWidth;
+                }
+            }
+
+            animationFrameId = requestAnimationFrame(scrollLoop);
+        };
+
+        animationFrameId = requestAnimationFrame(scrollLoop);
+
+        return () => {
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, [isTestimonialsPaused]);
+
+    const handleTestimonialsScroll = (direction: 'left' | 'right') => {
+        if (!testimonialsRef.current) return;
+        setIsTestimonialsPaused(true);
+        const scrollAmount = 380;
+        testimonialsRef.current.scrollBy({
+            left: direction === 'left' ? -scrollAmount : scrollAmount,
+            behavior: 'smooth'
+        });
+        setTimeout(() => setIsTestimonialsPaused(false), 2000);
     };
 
     // Safe fallbacks in case database is empty
@@ -84,6 +177,78 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
         { name: 'Industrial', description: 'Practical spaces built for operations', query: 'industrial', img: 'https://images.unsplash.com/photo-1565793298595-6a879b1d9492?q=80&w=900&auto=format&fit=crop' },
         { name: 'Commercial', description: 'High-visibility spaces for growing businesses', query: 'commercial', img: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=900&auto=format&fit=crop' },
         { name: 'Building Code', description: 'Development-ready land and structures', query: 'building-code', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=900&auto=format&fit=crop' },
+    ];
+
+    const agentsList = [
+        { name: 'Oluwaseun Adebayo', role: 'Senior Agent, Lagos', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop', deals: '48 Closed Deals' },
+        { name: 'Chika Nwosu', role: 'Property Manager, Abuja', img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop', deals: '35 Closed Deals' },
+        { name: 'Ahmed Ibrahim', role: 'Commercial Specialist, Lagos', img: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?q=80&w=400&auto=format&fit=crop', deals: '62 Closed Deals' },
+        { name: 'Grace Okafor', role: 'Luxury Consultant, Ikoyi', img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop', deals: '29 Closed Deals' },
+        { name: 'Emeka Eze', role: 'Residential Expert, Lekki', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop', deals: '41 Closed Deals' },
+        { name: 'Amina Bello', role: 'Short-let Consultant, Abuja', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop', deals: '53 Closed Deals' },
+    ];
+
+    const testimonialsList = [
+        {
+            name: 'Rebeka Dawson',
+            role: 'Verified Tenant',
+            city: 'Lekki Phase 1, Lagos',
+            headline: 'Zero fear of fake landlords or inspection fee scams!',
+            text: 'Rentify completely changed my house hunting experience. The escrow vault held my funds safely until I physically inspected the apartment, verified the title, and received the keys.',
+            img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop',
+            tag: '₦3.5M Escrow Vault',
+            verified: 'Verified Tenant'
+        },
+        {
+            name: 'Chief Marc Kenneth',
+            role: 'Property Investor',
+            city: 'Ikoyi, Lagos',
+            headline: 'Seamless rent collection with zero payment defaults',
+            text: 'Managing luxury duplexes used to be an operational headache. With Rentify, I only deal with vetted, KYC-verified tenants. The escrow release happened automatically on move-in day.',
+            img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop',
+            tag: '₦12M Luxury Lease',
+            verified: 'Verified Landlord'
+        },
+        {
+            name: 'Owen Lester',
+            role: 'Senior Real Estate Broker',
+            city: 'Victoria Island, Lagos',
+            headline: 'Closed 3x more rental deals with zero trust friction',
+            text: 'Clients trust me immediately because their funds never enter private accounts—everything sits protected in Rentify escrow until legal contracts are signed digitally.',
+            img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop',
+            tag: 'Top Agent 2026',
+            verified: 'Verified Agent'
+        },
+        {
+            name: 'Dr. Folake Adeyemi',
+            role: 'Diaspora Landlord',
+            city: 'London / Abuja',
+            headline: 'Managed my Abuja rentals from London with total peace of mind',
+            text: 'Living abroad while leasing property in Nigeria was terrifying before Rentify. Digital tenancy agreements and automated escrow payouts made the entire process 100% transparent.',
+            img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=200&auto=format&fit=crop',
+            tag: '₦8.5M Escrow Safe',
+            verified: 'Verified Owner'
+        },
+        {
+            name: 'Tunde Bakare',
+            role: 'Tech Lead & Renter',
+            city: 'Yaba, Lagos',
+            headline: 'Inspected 3 flats and paid zero fraudulent caution fees',
+            text: 'I scheduled 3 verified inspections through the app, picked my dream flat in Yaba, and only released payment once the lease was finalized. No hidden agency cuts or bogus fees.',
+            img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop',
+            tag: '₦2.8M Flat Lease',
+            verified: 'Verified Tenant'
+        },
+        {
+            name: 'Halima Mohammed',
+            role: 'Corporate Professional',
+            city: 'Maitama, Abuja',
+            headline: 'Digital lease signed in 10 mins, keys handed over same day',
+            text: 'The seamless combination of electronic legal agreements, identity verification, and instant bank disbursement makes Rentify the gold standard of modern Nigerian real estate.',
+            img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200&auto=format&fit=crop',
+            tag: '₦6.0M Lease',
+            verified: 'Verified Tenant'
+        }
     ];
 
     return (
@@ -304,12 +469,12 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
             {/* Most Popular Places */}
             <section className="pt-16 pb-12 bg-white border-b border-slate-100">
                 <div className="max-w-7xl mx-auto px-4 md:px-8">
-                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-                        <div>
+                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 text-center sm:text-left items-center sm:items-end">
+                        <div className="w-full sm:w-auto">
                             <span className="text-sm font-bold text-amber-500 uppercase tracking-widest mb-2 block">Top Places</span>
                             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900">Most Popular Cities</h2>
                         </div>
-                        <Link href="/cities" className="text-sm font-bold text-blue-900 hover:text-blue-700 flex items-center gap-1.5 transition-colors shrink-0">
+                        <Link href="/cities" className="text-sm font-bold text-blue-900 hover:text-blue-700 flex items-center justify-center sm:justify-start gap-1.5 transition-colors shrink-0">
                             Browse All Cities <ArrowRight className="w-4 h-4" />
                         </Link>
                     </div>
@@ -318,7 +483,7 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
                         {/* Large Tile - Lagos */}
                         <Link href={`/browse?location=${safeTopPlaces[0]?.city || 'Lagos'}`} className="group relative rounded-2xl md:rounded-3xl overflow-hidden col-span-2 md:col-span-2 md:row-span-2 h-[110px] md:h-full flex items-center justify-between px-5 md:p-0 md:items-end">
                             <img src={safeTopPlaces[0]?.img} alt={safeTopPlaces[0]?.city} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                            <div className="absolute inset-0 bg-black/50 md:bg-gradient-to-t md:from-black/80 md:via-black/20 md:to-transparent"></div>
+                            <div className="absolute inset-0 bg-black/25 md:bg-gradient-to-t md:from-black/50 md:via-black/10 md:to-transparent"></div>
                             <div className="relative z-10 flex items-center justify-between w-full md:block md:w-auto md:absolute md:bottom-8 md:left-8">
                                 <h3 className="text-xl md:text-3xl font-extrabold text-white md:mb-2">{safeTopPlaces[0]?.city}</h3>
                                 <p className="text-white/90 text-[11px] md:text-base font-medium bg-white/20 md:bg-transparent px-2.5 py-1 md:p-0 rounded-lg md:rounded-none backdrop-blur-sm md:backdrop-blur-none">{safeTopPlaces[0]?.count}+ Properties</p>
@@ -327,7 +492,7 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
                         {/* Small Tile - Abuja */}
                         <Link href={`/browse?location=${safeTopPlaces[1]?.city || 'Abuja'}`} className="group relative rounded-2xl md:rounded-3xl overflow-hidden col-span-1 h-[110px] md:h-72 flex flex-col justify-center items-center md:justify-end md:items-start p-3 md:p-0">
                             <img src={safeTopPlaces[1]?.img} alt={safeTopPlaces[1]?.city} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                            <div className="absolute inset-0 bg-black/50 md:bg-gradient-to-t md:from-black/80 md:via-black/20 md:to-transparent"></div>
+                            <div className="absolute inset-0 bg-black/25 md:bg-gradient-to-t md:from-black/50 md:via-black/10 md:to-transparent"></div>
                             <div className="relative z-10 text-center md:text-left md:absolute md:bottom-6 md:left-6">
                                 <h3 className="text-lg md:text-2xl font-extrabold text-white mb-1">{safeTopPlaces[1]?.city}</h3>
                                 <p className="text-white/90 text-[10px] md:text-base font-medium">{safeTopPlaces[1]?.count}+ Properties</p>
@@ -336,7 +501,7 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
                         {/* Small Tile - Port Harcourt */}
                         <Link href={`/browse?location=${safeTopPlaces[2]?.city || 'Port Harcourt'}`} className="group relative rounded-2xl md:rounded-3xl overflow-hidden col-span-1 h-[110px] md:h-72 flex flex-col justify-center items-center md:justify-end md:items-start p-3 md:p-0">
                             <img src={safeTopPlaces[2]?.img} alt={safeTopPlaces[2]?.city} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 bg-slate-200" />
-                            <div className="absolute inset-0 bg-black/50 md:bg-gradient-to-t md:from-black/80 md:via-black/20 md:to-transparent"></div>
+                            <div className="absolute inset-0 bg-black/25 md:bg-gradient-to-t md:from-black/50 md:via-black/10 md:to-transparent"></div>
                             <div className="relative z-10 text-center md:text-left md:absolute md:bottom-6 md:left-6">
                                 <h3 className="text-lg md:text-2xl font-extrabold text-white mb-1 truncate max-w-[80px] md:max-w-none">{safeTopPlaces[2]?.city}</h3>
                                 <p className="text-white/90 text-[10px] md:text-base font-medium">{safeTopPlaces[2]?.count}+ Properties</p>
@@ -349,13 +514,13 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
             {/* Property Categories */}
             <section className="py-8 md:py-20 bg-slate-50 border-y border-slate-100">
                 <div className="max-w-7xl mx-auto px-4 md:px-8">
-                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-                        <div>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 text-center md:text-left items-center md:items-end">
+                        <div className="w-full md:w-auto">
                             <span className="text-sm font-bold text-amber-500 uppercase tracking-widest mb-2 block">Browse by type</span>
                             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900">Find the right space</h2>
                             <p className="text-slate-500 font-medium mt-2">Explore properties shaped around the way you live and work.</p>
                         </div>
-                        <Link href="/types" className="text-sm font-bold text-blue-900 hover:text-blue-700 flex items-center gap-1.5 transition-colors shrink-0">
+                        <Link href="/types" className="text-sm font-bold text-blue-900 hover:text-blue-700 flex items-center justify-center md:justify-start gap-1.5 transition-colors shrink-0">
                             View all properties <ArrowRight className="w-4 h-4" />
                         </Link>
                     </div>
@@ -374,7 +539,7 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
                                     onError={(event) => { event.currentTarget.src = '/images/lagos.jpg'; }}
                                     className="absolute inset-0 block h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/10 to-transparent" />
                                 <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
                                     <h3 className="text-lg md:text-xl font-extrabold text-white">{category.name}</h3>
                                     <p className="mt-1 text-[11px] md:text-xs font-medium leading-relaxed text-white/75">{category.description}</p>
@@ -390,8 +555,8 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
 
             {/* Featured Listings */}
             <section className="pt-10 pb-16 px-4 md:px-8 max-w-7xl mx-auto">
-                <div className="flex items-end justify-between mb-10">
-                    <div>
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 text-center sm:text-left">
+                    <div className="w-full sm:w-auto">
                         <span className="text-sm font-bold text-amber-500 uppercase tracking-widest mb-2 block">Featured</span>
                         <h2 className="text-3xl font-extrabold text-slate-900 mb-1">Latest Verified Properties</h2>
                         <p className="text-slate-500 font-medium">{safeFeaturedListings.length} properties freshly listed across Nigeria.</p>
@@ -407,7 +572,7 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
                             <div className="relative aspect-[3/4] rounded-2xl md:rounded-3xl overflow-hidden mb-3 shadow-sm border border-slate-100">
                                 <img src={listing.img} alt={listing.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
 
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent"></div>
 
                                 {/* Top Badges */}
                                 <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
@@ -461,23 +626,23 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 card-hover group">
-                            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-blue-500/30">
-                                <ShieldCheck className="w-8 h-8" />
+                        <div className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 card-hover group flex flex-col items-center text-center">
+                            <div className="w-16 h-16 bg-blue-50 border border-blue-100 text-blue-900 rounded-full flex items-center justify-center mb-6 shadow-sm ring-8 ring-blue-50/50 group-hover:scale-110 group-hover:bg-blue-900 group-hover:text-white group-hover:ring-blue-100 transition-all duration-300">
+                                <ShieldCheck className="w-8 h-8 stroke-[1.8]" />
                             </div>
                             <h3 className="text-xl font-bold text-slate-900 mb-3">100% Escrow Protected</h3>
                             <p className="text-slate-500 font-medium leading-relaxed text-sm">Your money is held safely in our vault until you've inspected the property and signed. Zero risk of fraud, ever.</p>
                         </div>
-                        <div className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 card-hover group">
-                            <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/30">
-                                <CheckCircle2 className="w-8 h-8" />
+                        <div className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 card-hover group flex flex-col items-center text-center">
+                            <div className="w-16 h-16 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-6 shadow-sm ring-8 ring-emerald-50/50 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white group-hover:ring-emerald-100 transition-all duration-300">
+                                <BadgeCheck className="w-8 h-8 stroke-[1.8]" />
                             </div>
                             <h3 className="text-xl font-bold text-slate-900 mb-3">KYC Verified Agents</h3>
                             <p className="text-slate-500 font-medium leading-relaxed text-sm">Every agent on our platform undergoes strict KYC verification using NIN and CAC documentation to ensure authenticity.</p>
                         </div>
-                        <div className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 card-hover group">
-                            <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-amber-600 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-500/30">
-                                <Award className="w-8 h-8" />
+                        <div className="bg-white p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 card-hover group flex flex-col items-center text-center">
+                            <div className="w-16 h-16 bg-amber-50 border border-amber-100 text-amber-500 rounded-full flex items-center justify-center mb-6 shadow-sm ring-8 ring-amber-50/50 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white group-hover:ring-amber-100 transition-all duration-300">
+                                <Sparkles className="w-8 h-8 stroke-[1.8]" />
                             </div>
                             <h3 className="text-xl font-bold text-slate-900 mb-3">Premium Experience</h3>
                             <p className="text-slate-500 font-medium leading-relaxed text-sm">From virtual tours to instant booking — enjoy a seamless, modern property search experience built for 2025.</p>
@@ -537,71 +702,184 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
             </section>
 
             {/* Our Agents */}
-            <section className="py-24 bg-white border-t border-slate-100">
+            <section className="py-24 bg-white border-t border-slate-100 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 md:px-8">
-                    <div className="text-center max-w-2xl mx-auto mb-16">
-                        <span className="text-sm font-bold text-amber-500 uppercase tracking-widest mb-2 block">Our Agents</span>
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Meet Our Excellent Agents</h2>
-                        <p className="text-slate-500 font-medium text-lg">Work with Nigeria's most trusted and verified real estate professionals.</p>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 text-center md:text-left">
+                        <div className="max-w-2xl mx-auto md:mx-0">
+                            <span className="text-sm font-bold text-amber-500 uppercase tracking-widest mb-2 block">Our Agents</span>
+                            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">Meet Our Excellent Agents</h2>
+                            <p className="text-slate-500 font-medium text-base md:text-lg">Work with Nigeria's most trusted and verified real estate professionals.</p>
+                        </div>
+
+                        {/* Navigation Controls */}
+                        <div className="hidden sm:flex items-center justify-center md:justify-end gap-3 shrink-0">
+                            <button
+                                onClick={() => handleManualScroll('left')}
+                                aria-label="Scroll left"
+                                className="w-12 h-12 rounded-full border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition-all shadow-sm active:scale-95"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={() => handleManualScroll('right')}
+                                aria-label="Scroll right"
+                                className="w-12 h-12 rounded-full border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-700 flex items-center justify-center transition-all shadow-sm active:scale-95"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {[
-                            { name: 'Oluwaseun Adebayo', role: 'Senior Agent, Lagos', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop' },
-                            { name: 'Chika Nwosu', role: 'Property Manager', img: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop' },
-                            { name: 'Ahmed Ibrahim', role: 'Commercial Specialist', img: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?q=80&w=400&auto=format&fit=crop' },
-                            { name: 'Grace Okafor', role: 'Luxury Consultant', img: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop' }
-                        ].map((agent, i) => (
-                            <div key={i} className="group bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 transition-all hover:shadow-xl hover:shadow-slate-200/50">
-                                <div className="aspect-[4/5] overflow-hidden relative">
-                                    <img src={agent.img} alt={agent.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
-                                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                                        <span className="text-[10px] font-extrabold text-slate-900 uppercase tracking-wider">KYC Verified</span>
+                    {/* Auto-scrolling & Swipeable Track */}
+                    <div className="relative">
+                        {/* Soft edge fade masks for desktop */}
+                        <div className="pointer-events-none hidden md:block absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white via-white/80 to-transparent z-10" />
+                        <div className="pointer-events-none hidden md:block absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white via-white/80 to-transparent z-10" />
+
+                        <div
+                            ref={scrollRef}
+                            onMouseEnter={() => setIsPaused(true)}
+                            onMouseLeave={() => setIsPaused(false)}
+                            onTouchStart={() => setIsPaused(true)}
+                            onTouchEnd={() => {
+                                setTimeout(() => setIsPaused(false), 1500);
+                            }}
+                            className="flex overflow-x-auto gap-6 pb-6 pt-2 hide-scrollbar select-none"
+                            style={{ scrollBehavior: 'auto', WebkitOverflowScrolling: 'touch' }}
+                        >
+                            {/* Duplicate array for seamless infinite auto-scroll */}
+                            {[...agentsList, ...agentsList].map((agent, i) => (
+                                <div
+                                    key={i}
+                                    className="w-[260px] sm:w-[280px] shrink-0 group bg-slate-50 rounded-3xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/60 hover:-translate-y-1.5"
+                                >
+                                    <div className="aspect-[4/5] overflow-hidden relative">
+                                        <img
+                                            src={agent.img}
+                                            alt={agent.name}
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 pointer-events-none"
+                                        />
+                                        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                                            <span className="text-[10px] font-extrabold text-slate-900 uppercase tracking-wider">KYC Verified</span>
+                                        </div>
+                                    </div>
+                                    <div className="p-5 text-center">
+                                        <h4 className="text-lg sm:text-xl font-bold text-slate-900 mb-1 group-hover:text-blue-900 transition-colors">{agent.name}</h4>
+                                        <p className="text-xs sm:text-sm font-medium text-slate-500 mb-3">{agent.role}</p>
+                                        <span className="inline-block text-[11px] sm:text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">{agent.deals}</span>
                                     </div>
                                 </div>
-                                <div className="p-6 text-center">
-                                    <h4 className="text-xl font-bold text-slate-900 mb-1">{agent.name}</h4>
-                                    <p className="text-sm font-medium text-slate-500">{agent.role}</p>
-                                </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+
+                        {/* Mobile swipe hint */}
+                        <div className="sm:hidden flex items-center justify-center gap-2 text-xs font-semibold text-slate-400 mt-3">
+                            <span>← Auto-scrolling · Swipe to explore →</span>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* Testimonials */}
             <section className="py-24 bg-blue-900 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-800 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/3"></div>
-                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-800 rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/3"></div>
+                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-800 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-800 rounded-full blur-3xl opacity-50 translate-y-1/2 -translate-x-1/3 pointer-events-none"></div>
 
                 <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
-                    <div className="text-center max-w-2xl mx-auto mb-16">
-                        <span className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-2 block">Testimonials</span>
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">What They Say About Us</h2>
-                        <p className="text-blue-100 font-medium text-lg">Don't just take our word for it. Hear from our satisfied users.</p>
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 text-center md:text-left">
+                        <div className="max-w-2xl mx-auto md:mx-0">
+                            <span className="text-sm font-bold text-amber-400 uppercase tracking-widest mb-2 block">Testimonials</span>
+                            <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-3">What They Say About Us</h2>
+                            <p className="text-blue-100 font-medium text-base md:text-lg">Don't just take our word for it. Hear from our satisfied users across Nigeria.</p>
+                        </div>
+
+                        {/* Navigation Controls */}
+                        <div className="hidden sm:flex items-center justify-center md:justify-end gap-3 shrink-0">
+                            <button
+                                onClick={() => handleTestimonialsScroll('left')}
+                                aria-label="Previous testimonials"
+                                className="w-12 h-12 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all shadow-sm active:scale-95 backdrop-blur-sm"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={() => handleTestimonialsScroll('right')}
+                                aria-label="Next testimonials"
+                                className="w-12 h-12 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all shadow-sm active:scale-95 backdrop-blur-sm"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            { name: 'Rebeka Dawson', role: 'Tenant in Lekki', text: 'Rentify completely changed my house hunting experience. The escrow feature gave me the confidence to pay for my inspection without fear of being scammed.', img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop' },
-                            { name: 'Marc Kenneth', role: 'Property Owner', text: 'Managing my properties used to be a nightmare. With Rentify, I only deal with serious, verified tenants. The escrow release process is seamless and fast.', img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=200&auto=format&fit=crop' },
-                            { name: 'Owen Lester', role: 'Verified Agent', text: 'This platform has helped me close deals 3x faster. Clients trust me more because they know their funds are secure in Rentify\'s escrow vault.', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop' }
-                        ].map((testimonial, i) => (
-                            <div key={i} className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 relative">
-                                <div className="absolute -top-6 left-8 w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center text-white">
-                                    <svg className="w-5 h-5 fill-current" viewBox="0 0 32 32"><path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z"/></svg>
-                                </div>
-                                <p className="text-white/90 font-medium leading-relaxed mb-8 mt-2 text-lg">"{testimonial.text}"</p>
-                                <div className="flex items-center gap-4">
-                                    <img src={testimonial.img} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover border-2 border-white/20" />
+                    {/* Auto-scrolling & Swipeable Track */}
+                    <div className="relative">
+                        {/* Soft edge fade masks for desktop */}
+                        <div className="pointer-events-none hidden md:block absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-blue-900 via-blue-900/80 to-transparent z-10" />
+                        <div className="pointer-events-none hidden md:block absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-blue-900 via-blue-900/80 to-transparent z-10" />
+
+                        <div
+                            ref={testimonialsRef}
+                            onMouseEnter={() => setIsTestimonialsPaused(true)}
+                            onMouseLeave={() => setIsTestimonialsPaused(false)}
+                            onTouchStart={() => setIsTestimonialsPaused(true)}
+                            onTouchEnd={() => {
+                                setTimeout(() => setIsTestimonialsPaused(false), 1500);
+                            }}
+                            className="flex overflow-x-auto gap-6 pb-6 pt-2 hide-scrollbar select-none"
+                            style={{ scrollBehavior: 'auto', WebkitOverflowScrolling: 'touch' }}
+                        >
+                            {[...testimonialsList, ...testimonialsList].map((testimonial, i) => (
+                                <div
+                                    key={i}
+                                    className="w-[300px] sm:w-[380px] shrink-0 bg-white/10 backdrop-blur-md p-7 sm:p-8 rounded-3xl border border-white/20 relative flex flex-col justify-between transition-all duration-300 hover:bg-white/15 hover:border-white/30 hover:-translate-y-1"
+                                >
                                     <div>
-                                        <h4 className="text-white font-bold">{testimonial.name}</h4>
-                                        <p className="text-blue-200 text-sm font-medium">{testimonial.role}</p>
+                                        {/* Stars & Tag */}
+                                        <div className="flex items-center justify-between gap-2 mb-4">
+                                            <div className="flex items-center gap-1 text-amber-400">
+                                                {[...Array(5)].map((_, starIdx) => (
+                                                    <Star key={starIdx} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                                                ))}
+                                            </div>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-blue-200 bg-blue-950/60 border border-blue-800/60 px-2.5 py-1 rounded-full">
+                                                {testimonial.verified}
+                                            </span>
+                                        </div>
+
+                                        <h3 className="text-white font-bold text-base sm:text-lg mb-2 leading-snug">
+                                            "{testimonial.headline}"
+                                        </h3>
+
+                                        <p className="text-blue-100/90 text-sm leading-relaxed mb-6 font-normal">
+                                            "{testimonial.text}"
+                                        </p>
+                                    </div>
+
+                                    <div className="flex items-center gap-3.5 pt-5 border-t border-white/15">
+                                        <img
+                                            src={testimonial.img}
+                                            alt={testimonial.name}
+                                            className="w-11 h-11 rounded-full object-cover border-2 border-white/30 shrink-0"
+                                        />
+                                        <div>
+                                            <h4 className="text-white font-bold text-sm sm:text-base leading-tight">
+                                                {testimonial.name}
+                                            </h4>
+                                            <p className="text-blue-200 text-xs font-medium mt-0.5">
+                                                {testimonial.role} · {testimonial.city}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+
+                        {/* Mobile swipe hint */}
+                        <div className="sm:hidden flex items-center justify-center gap-2 text-xs font-semibold text-blue-200 mt-4">
+                            <span>← Auto-scrolling · Swipe to explore →</span>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -647,28 +925,244 @@ export default function Welcome({ topPlaces = [], featuredListings = [] }: { top
             </section>
 
             {/* Footer */}
-            <footer className="bg-white pt-20 pb-10 border-t border-slate-200">
+            <footer className="bg-white pt-20 pb-12 border-t border-slate-200 text-slate-600">
                 <div className="max-w-7xl mx-auto px-4 md:px-8">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
-                        <Link href="/" className="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-blue-900">
-                            <div className="w-8 h-8 bg-blue-900 rounded-lg flex items-center justify-center">
-                                <ShieldCheck className="text-white w-5 h-5" />
+                    {/* Newsletter & Rental Alerts Banner */}
+                    <div className="bg-slate-50 rounded-3xl p-8 sm:p-10 border border-slate-200/80 mb-16">
+                        <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+                            <div className="max-w-xl text-center lg:text-left">
+                                <span className="text-xs font-bold uppercase tracking-widest text-amber-500 mb-2 block">Rental Alerts</span>
+                                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+                                    Get Weekly Verified Rental Alerts
+                                </h3>
+                                <p className="text-slate-500 text-sm sm:text-base">
+                                    Subscribe for first-look notifications on vetted apartments in Lekki, Ikoyi, Victoria Island, and Abuja.
+                                </p>
                             </div>
-                            Rent<span className="text-amber-500">ify</span>
-                        </Link>
 
-                        <div className="flex gap-8 text-sm font-bold text-slate-500">
-                            <a href="#" className="hover:text-blue-900 transition-colors">About Us</a>
-                            <a href="#" className="hover:text-blue-900 transition-colors">Help Center</a>
-                            <a href="#" className="hover:text-blue-900 transition-colors">Terms & Privacy</a>
+                            <form onSubmit={(e) => e.preventDefault()} className="w-full lg:w-auto flex-1 max-w-md">
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                    <div className="relative flex-1">
+                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                        <input
+                                            type="email"
+                                            placeholder="Enter your email address"
+                                            className="w-full pl-11 pr-4 py-3.5 rounded-full bg-white border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900 transition-all shadow-sm"
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="bg-blue-900 hover:bg-blue-800 text-white text-sm font-bold px-7 py-3.5 rounded-full transition-all shadow-sm active:scale-95 flex items-center justify-center gap-2 shrink-0"
+                                    >
+                                        Subscribe <Send className="w-4 h-4" />
+                                    </button>
+                                </div>
+                                <p className="text-xs text-slate-400 mt-2.5 text-center lg:text-left flex items-center justify-center lg:justify-start gap-1.5">
+                                    <ShieldCheck className="w-3.5 h-3.5 text-blue-900 shrink-0" />
+                                    <span>Zero spam · Instant unsubscribe anytime · Bank-grade data protection</span>
+                                </p>
+                            </form>
                         </div>
                     </div>
 
-                    <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.2em]">© 2026 Rentify Technologies Ltd.</div>
-                        <div className="flex items-center gap-4">
-                            <i className="fa-brands fa-cc-visa text-3xl text-slate-300"></i>
-                            <i className="fa-brands fa-cc-mastercard text-3xl text-slate-300"></i>
+                    {/* Main Footer Directory Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 pb-16 border-b border-slate-100">
+                        {/* Column 1: Brand & Contact */}
+                        <div className="lg:col-span-2 pr-0 lg:pr-8">
+                            <Link href="/" className="inline-flex items-center gap-2 text-2xl font-extrabold tracking-tight text-blue-900 mb-4 hover:opacity-90 transition-opacity">
+                                <div className="w-9 h-9 bg-blue-900 rounded-xl flex items-center justify-center shadow-inner">
+                                    <ShieldCheck className="text-white w-5 h-5" />
+                                </div>
+                                Rent<span className="text-amber-500">ify</span>
+                            </Link>
+                            <p className="text-slate-500 text-sm leading-relaxed mb-6 max-w-sm">
+                                Nigeria's foremost escrow-backed rental marketplace. We eliminate fraudulent inspection fees, hold deposits in secure vaults, and modernize residential leases.
+                            </p>
+
+                            {/* Trust Signals */}
+                            <div className="flex flex-wrap gap-2 mb-6">
+                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
+                                    NDPR Compliant
+                                </span>
+                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
+                                    CAC RC: 1894022
+                                </span>
+                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full">
+                                    Escrow Protected
+                                </span>
+                            </div>
+
+                            {/* Contact Details */}
+                            <div className="space-y-2.5 text-xs text-slate-500">
+                                <div className="flex items-center gap-2">
+                                    <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                                    <span>Victoria Island, Lagos · CBD, Abuja</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Mail className="w-4 h-4 text-slate-400 shrink-0" />
+                                    <a href="mailto:support@rentify.ng" className="hover:text-blue-900 transition-colors">support@rentify.ng</a>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Phone className="w-4 h-4 text-slate-400 shrink-0" />
+                                    <span>+234 (01) 888-RENT · Mon - Sat: 8AM - 7PM</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Column 2: For Renters */}
+                        <div>
+                            <h4 className="text-xs font-extrabold uppercase tracking-widest text-slate-900 mb-4">
+                                For Renters
+                            </h4>
+                            <ul className="space-y-3 text-sm">
+                                <li>
+                                    <Link href="/browse" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Browse Verified Homes
+                                    </Link>
+                                </li>
+                                <li>
+                                    <a href="#escrow" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        How Escrow Works
+                                    </a>
+                                </li>
+                                <li>
+                                    <Link href="/browse?location=Lekki" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Flats in Lekki Phase 1
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/browse?location=Ikoyi" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Luxury Homes in Ikoyi
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link href="/browse?location=Abuja" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Duplexes in Abuja
+                                    </Link>
+                                </li>
+                                <li>
+                                    <a href="#trust" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Anti-Fraud Guide
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Column 3: For Landlords & Agents */}
+                        <div>
+                            <h4 className="text-xs font-extrabold uppercase tracking-widest text-slate-900 mb-4">
+                                Landlords & Agents
+                            </h4>
+                            <ul className="space-y-3 text-sm">
+                                <li>
+                                    <Link href={register()} className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        List a Property
+                                    </Link>
+                                </li>
+                                <li>
+                                    <a href="#trust" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Automated Rent Payouts
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#trust" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Verified Agent Network
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#trust" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        NIN & CAC Screening
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#trust" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Digital Lease Agreements
+                                    </a>
+                                </li>
+                                <li>
+                                    <Link href={login()} className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Owner Portal Login
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* Column 4: Trust & Legal */}
+                        <div>
+                            <h4 className="text-xs font-extrabold uppercase tracking-widest text-slate-900 mb-4">
+                                Trust & Legal
+                            </h4>
+                            <ul className="space-y-3 text-sm">
+                                <li>
+                                    <a href="#" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        About Rentify
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Careers
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Terms of Service
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Privacy Policy & NDPR
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Dispute Resolution Policy
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="mailto:support@rentify.ng" className="text-slate-600 hover:text-blue-900 transition-colors">
+                                        Help Center & Support
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* Payment Rails Strip */}
+                    <div className="py-6 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-2 text-xs font-bold text-slate-600 uppercase tracking-wider">
+                            <CreditCard className="w-4 h-4 text-slate-400" />
+                            <span>Secured Payment Infrastructure</span>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-center gap-2">
+                            <span className="px-3 py-1 rounded-md bg-slate-50 border border-slate-200 text-xs font-bold text-slate-600">Mastercard</span>
+                            <span className="px-3 py-1 rounded-md bg-slate-50 border border-slate-200 text-xs font-bold text-slate-600">Visa</span>
+                            <span className="px-3 py-1 rounded-md bg-slate-50 border border-slate-200 text-xs font-bold text-slate-600">Verve</span>
+                            <span className="px-3 py-1 rounded-md bg-slate-50 border border-slate-200 text-xs font-bold text-slate-600">NIBSS Transfer</span>
+                            <span className="px-3 py-1 rounded-md bg-slate-50 border border-slate-200 text-xs font-bold text-slate-600">Paystack</span>
+                        </div>
+                    </div>
+
+                    {/* Bottom Legal & Social Bar */}
+                    <div className="pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-400">
+                        <div>
+                            © 2026 Rentify Technologies Ltd. All rights reserved.
+                        </div>
+
+                        {/* Social Links */}
+                        <div className="flex items-center gap-2">
+                            <a href="#" aria-label="Twitter" className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 hover:text-blue-900 flex items-center justify-center transition-colors">
+                                <Twitter className="w-3.5 h-3.5" />
+                            </a>
+                            <a href="#" aria-label="LinkedIn" className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 hover:text-blue-900 flex items-center justify-center transition-colors">
+                                <Linkedin className="w-3.5 h-3.5" />
+                            </a>
+                            <a href="#" aria-label="Instagram" className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 hover:text-blue-900 flex items-center justify-center transition-colors">
+                                <Instagram className="w-3.5 h-3.5" />
+                            </a>
+                            <a href="#" aria-label="Facebook" className="w-8 h-8 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 hover:text-blue-900 flex items-center justify-center transition-colors">
+                                <Facebook className="w-3.5 h-3.5" />
+                            </a>
                         </div>
                     </div>
                 </div>
