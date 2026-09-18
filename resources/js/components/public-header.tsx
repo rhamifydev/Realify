@@ -20,6 +20,8 @@ type Props = {
 
 export default function PublicHeader({ categories = [] }: Props) {
     const { auth } = usePage().props as any;
+    const { url } = usePage();
+    const isBrowseActive = url?.startsWith('/browse');
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-xl border-b border-slate-200/50 shadow-sm transition-all duration-300">
@@ -32,7 +34,14 @@ export default function PublicHeader({ categories = [] }: Props) {
                         Rent<span className="text-amber-500">ify</span>
                     </Link>
                     <div className="hidden lg:flex items-center gap-8">
-                        <Link href="/browse" className="text-sm font-bold text-slate-600 hover:text-blue-900 transition-colors">Find a Home</Link>
+                        <Link 
+                            href="/browse" 
+                            className={`text-sm font-bold transition-colors ${
+                                isBrowseActive ? 'text-blue-900 font-extrabold' : 'text-slate-600 hover:text-blue-900'
+                            }`}
+                        >
+                            Find a Home
+                        </Link>
                         <a href="/#escrow" className="text-sm font-bold text-slate-600 hover:text-blue-900 transition-colors">How Escrow Works</a>
                         <a href="/#trust" className="text-sm font-bold text-slate-600 hover:text-blue-900 transition-colors">Trust & Safety</a>
                     </div>

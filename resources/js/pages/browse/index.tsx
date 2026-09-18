@@ -1,14 +1,15 @@
 import { Head, Link, useForm, router } from '@inertiajs/react';
-import { dashboard, login, register } from '@/routes';
-import { ShieldCheck, MapPin, Search, CheckCircle2, ChevronRight, Star, Home, Building2, Wallet, Filter, Navigation, Loader2, MapPinOff, Bed, Bath, SlidersHorizontal, X, Menu } from 'lucide-react';
-import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from '@/components/ui/sheet';
-import { useState, useEffect, useCallback } from 'react';
+import PublicHeader from '@/components/public-header';
+import { MapPin, Search, CheckCircle2, ChevronRight, ChevronLeft, Home, Navigation, Loader2, MapPinOff, Bed, Bath, SlidersHorizontal, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+const browseCategories = [
+    { name: 'Residential', query: 'residential' },
+    { name: 'Commercial', query: 'commercial' },
+    { name: 'Apartment', query: 'residential' },
+    { name: 'Industrial', query: 'commercial' },
+    { name: 'Building Code', query: 'commercial' },
+];
 
 function formatDistance(distance: number | undefined): string | null {
     if (distance === undefined || distance === null) return null;
@@ -94,56 +95,22 @@ export default function Browse({ properties, filters, auth, userLocation }: any)
         <div className="antialiased bg-[#F8FAFC] text-slate-900 min-h-screen font-sans">
             <Head title="Browse Properties — Rentify" />
 
-            {/* Mobile Top Bar */}
-            <div className="md:hidden flex items-center justify-between px-4 h-14 border-b border-slate-200 bg-white sticky top-0 z-50">
-                <div className="flex items-center">
-                    <Link href="/" className="flex items-center text-sm font-semibold text-slate-600 hover:text-blue-900 transition-colors">
-                        <Home className="w-4 h-4 mr-1.5" />
-                        Home
+            {/* Public Global Header */}
+            <PublicHeader categories={browseCategories} />
+
+            <main className="max-w-7xl mx-auto px-3.5 sm:px-6 md:px-8 pt-24 sm:pt-28 pb-12 md:pt-32">
+                {/* Breadcrumbs */}
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-500 mb-4 sm:mb-6">
+                    <Link href="/" className="hover:text-blue-900 transition-colors flex items-center gap-1.5">
+                        <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Home
                     </Link>
-                    <ChevronRight className="w-4 h-4 mx-2 text-slate-400" />
-                    <span className="text-sm font-semibold text-slate-900">Browse</span>
+                    <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" />
+                    <span className="text-slate-900 font-bold">Browse Properties</span>
                 </div>
-
-                {/* Mobile Menu */}
-                <div className="flex items-center">
-                    <Sheet>
-                        <SheetTrigger className="p-2 -mr-2 text-slate-600 hover:text-blue-900">
-                            <Menu className="w-6 h-6" />
-                        </SheetTrigger>
-                        <SheetContent side="right" className="bg-white w-[300px] sm:w-[400px]">
-                            <SheetHeader className="mb-8 mt-4 text-left">
-                                <SheetTitle className="flex items-center gap-2 text-2xl font-extrabold tracking-tight text-blue-900">
-                                    <div className="w-8 h-8 bg-blue-900 rounded-lg flex items-center justify-center">
-                                        <ShieldCheck className="text-white w-5 h-5" />
-                                    </div>
-                                    Rent<span className="text-amber-500">ify</span>
-                                </SheetTitle>
-                            </SheetHeader>
-                            <div className="flex flex-col gap-6">
-                                <Link href="/browse" className="text-lg font-bold text-slate-900 hover:text-blue-900">Find a Home</Link>
-                                <a href="/#escrow" className="text-lg font-bold text-slate-900 hover:text-blue-900">How Escrow Works</a>
-                                <a href="/#trust" className="text-lg font-bold text-slate-900 hover:text-blue-900">Trust & Safety</a>
-                                <div className="h-px bg-slate-100 my-2"></div>
-                                {auth?.user ? (
-                                    <Link href={dashboard()} className="bg-blue-900 text-white px-6 py-3 rounded-full text-center font-bold hover:bg-blue-800 transition-all">Go to Dashboard</Link>
-                                ) : (
-                                    <>
-                                        <Link href={login()} className="text-lg font-bold text-slate-900 hover:text-blue-900">Log In</Link>
-                                        <Link href={register()} className="bg-blue-900 text-white px-6 py-3 rounded-full text-center font-bold hover:bg-blue-800 transition-all">Sign Up</Link>
-                                    </>
-                                )}
-                            </div>
-                        </SheetContent>
-                    </Sheet>
-                </div>
-            </div>
-
-            <main className="max-w-7xl mx-auto px-4 md:px-8 py-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
                     <div>
-                        <h1 className="text-4xl font-extrabold text-slate-900 mb-2">Find your next home</h1>
-                        <p className="text-slate-500 font-medium text-lg">100% Escrow Protected. Verified listings only.</p>
+                        <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 mb-1.5 sm:mb-2">Find your next home</h1>
+                        <p className="text-slate-500 font-medium text-sm sm:text-lg">100% Escrow Protected. Verified listings only.</p>
                     </div>
                 </div>
 
@@ -295,7 +262,7 @@ export default function Browse({ properties, filters, auth, userLocation }: any)
                 )}
 
                 {/* Property Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-6 md:gap-8">
                     {properties.data.length === 0 ? (
                         <div className="col-span-full py-24 text-center">
                             <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -307,20 +274,20 @@ export default function Browse({ properties, filters, auth, userLocation }: any)
                     ) : (
                         properties.data.map((property: any) => (
                             <Link key={property.id} href={`/browse/${property.id}`} className="group block">
-                                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4 bg-slate-200 shadow-sm border border-slate-100">
+                                <div className="relative aspect-[4/3] rounded-xl sm:rounded-2xl overflow-hidden mb-2.5 sm:mb-4 bg-slate-200 shadow-sm border border-slate-100">
                                     <img 
                                         src={property.media?.[0]?.file_path ? `/storage/${property.media[0].file_path}` : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=800&auto=format&fit=crop'} 
                                         alt={property.title} 
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
                                     />
                                     
-                                    <div className="absolute top-4 left-4 flex items-center gap-2">
-                                        <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
-                                            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                                            <span className="text-[10px] font-extrabold text-slate-900 uppercase tracking-wider">Verified</span>
+                                    <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex flex-wrap items-center gap-1 sm:gap-2">
+                                        <div className="bg-white/90 backdrop-blur-sm px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-full flex items-center gap-1 sm:gap-1.5 shadow-sm">
+                                            <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-600" />
+                                            <span className="text-[9px] sm:text-[10px] font-extrabold text-slate-900 uppercase tracking-wider">Verified</span>
                                         </div>
                                         {property.category && (
-                                            <div className={`backdrop-blur-sm px-3 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider shadow-sm ${
+                                            <div className={`hidden sm:inline-block backdrop-blur-sm px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider shadow-sm ${
                                                 property.category === 'commercial' 
                                                     ? 'bg-violet-100/90 text-violet-700' 
                                                     : 'bg-sky-100/90 text-sky-700'
@@ -329,12 +296,12 @@ export default function Browse({ properties, filters, auth, userLocation }: any)
                                             </div>
                                         )}
                                     </div>
-                                    <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
-                                        <div className="bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-bold text-white shadow-sm">
+                                    <div className="absolute top-2 right-2 sm:top-4 sm:right-4 flex flex-col items-end gap-1 sm:gap-2">
+                                        <div className="bg-black/40 backdrop-blur-md px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold text-white shadow-sm">
                                             {property.units?.length || 0} Unit{property.units?.length !== 1 ? 's' : ''}
                                         </div>
                                         {property.type && (
-                                            <div className={`backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-bold shadow-sm ${
+                                            <div className={`backdrop-blur-md px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-full text-[9px] sm:text-[10px] font-bold shadow-sm ${
                                                 property.type === 'rent' ? 'bg-emerald-500/90 text-white' :
                                                 property.type === 'sale' ? 'bg-blue-500/90 text-white' :
                                                 'bg-amber-500/90 text-white'
@@ -346,9 +313,9 @@ export default function Browse({ properties, filters, auth, userLocation }: any)
 
                                     {/* Distance badge */}
                                     {property.distance !== undefined && property.distance !== null && (
-                                        <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
-                                            <Navigation className="w-3.5 h-3.5 text-blue-600" />
-                                            <span className="text-[11px] font-bold text-slate-700">
+                                        <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 bg-white/90 backdrop-blur-sm px-2 py-0.5 sm:px-3 sm:py-1.5 rounded-full flex items-center gap-1 sm:gap-1.5 shadow-sm">
+                                            <Navigation className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-blue-600" />
+                                            <span className="text-[9px] sm:text-[11px] font-bold text-slate-700">
                                                 {formatDistance(property.distance)}
                                             </span>
                                         </div>
@@ -357,9 +324,9 @@ export default function Browse({ properties, filters, auth, userLocation }: any)
                                 
                                 <div className="flex justify-between items-start">
                                     <div className="min-w-0 flex-1">
-                                        <h3 className="text-lg font-bold text-slate-900 mb-1 truncate">{property.title}</h3>
-                                        <p className="text-sm font-medium text-slate-500 flex items-center gap-1">
-                                            <MapPin className="w-3.5 h-3.5 shrink-0" /> 
+                                        <h3 className="text-sm sm:text-lg font-bold text-slate-900 mb-0.5 sm:mb-1 truncate">{property.title}</h3>
+                                        <p className="text-xs sm:text-sm font-medium text-slate-500 flex items-center gap-1">
+                                            <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" /> 
                                             <span className="truncate">{property.city || 'Lagos'}, {property.state || 'Lagos'}</span>
                                         </p>
                                     </div>
@@ -367,30 +334,30 @@ export default function Browse({ properties, filters, auth, userLocation }: any)
 
                                 {/* Quick stats */}
                                 {property.units?.[0] && property.category !== 'commercial' && (
-                                    <div className="flex items-center gap-3 mt-2 text-xs font-semibold text-slate-500">
+                                    <div className="flex items-center gap-2 sm:gap-3 mt-1 sm:mt-2 text-[11px] sm:text-xs font-semibold text-slate-500">
                                         {property.units[0].bedrooms > 0 && (
                                             <span className="flex items-center gap-1">
-                                                <Bed className="w-3.5 h-3.5" /> {property.units[0].bedrooms} Bed{property.units[0].bedrooms !== 1 ? 's' : ''}
+                                                <Bed className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> {property.units[0].bedrooms} Bed{property.units[0].bedrooms !== 1 ? 's' : ''}
                                             </span>
                                         )}
                                         {property.units[0].bathrooms > 0 && (
                                             <span className="flex items-center gap-1">
-                                                <Bath className="w-3.5 h-3.5" /> {property.units[0].bathrooms} Bath{property.units[0].bathrooms !== 1 ? 's' : ''}
+                                                <Bath className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> {property.units[0].bathrooms} Bath{property.units[0].bathrooms !== 1 ? 's' : ''}
                                             </span>
                                         )}
                                     </div>
                                 )}
 
-                                <div className="mt-3">
+                                <div className="mt-1.5 sm:mt-3">
                                     {property.units?.[0] ? (
                                         <>
-                                            <span className="text-xl font-extrabold text-slate-900">
+                                            <span className="text-base sm:text-xl font-extrabold text-slate-900">
                                                 ₦{Number(property.units[0].rent_price).toLocaleString()}
                                             </span>
-                                            <span className="text-sm font-medium text-slate-500"> / year</span>
+                                            <span className="text-xs sm:text-sm font-medium text-slate-500"> / year</span>
                                         </>
                                     ) : (
-                                        <span className="text-sm font-medium text-slate-500">Price on request</span>
+                                        <span className="text-xs sm:text-sm font-medium text-slate-500">Price on request</span>
                                     )}
                                 </div>
                             </Link>
@@ -400,22 +367,93 @@ export default function Browse({ properties, filters, auth, userLocation }: any)
 
                 {/* Pagination */}
                 {properties.links && properties.last_page > 1 && (
-                    <div className="flex items-center justify-center gap-2 mt-12">
-                        {properties.links.map((link: any, index: number) => (
-                            <Link
-                                key={index}
-                                href={link.url || '#'}
-                                className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
-                                    link.active
-                                        ? 'bg-blue-900 text-white shadow-md'
-                                        : link.url
-                                            ? 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
-                                            : 'text-slate-300 cursor-not-allowed'
-                                }`}
-                                dangerouslySetInnerHTML={{ __html: link.label }}
-                                preserveState
-                            />
-                        ))}
+                    <div className="mt-12 pt-8 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <p className="text-xs sm:text-sm font-medium text-slate-500 order-2 sm:order-1 text-center sm:text-left">
+                            Showing <span className="font-bold text-slate-900">{properties.from || 1}</span> to{' '}
+                            <span className="font-bold text-slate-900">{properties.to || properties.data.length}</span> of{' '}
+                            <span className="font-bold text-slate-900">{properties.total}</span> properties
+                        </p>
+
+                        <nav aria-label="Properties pagination" className="flex items-center gap-1 sm:gap-1.5 flex-wrap justify-center order-1 sm:order-2">
+                            {properties.links.map((link: any, index: number) => {
+                                const isPrev = index === 0 || link.label.includes('Previous') || link.label.includes('&laquo;');
+                                const isNext = index === properties.links.length - 1 || link.label.includes('Next') || link.label.includes('&raquo;');
+                                const isEllipsis = link.label === '...' || link.label === '&hellip;';
+
+                                if (isEllipsis) {
+                                    return (
+                                        <span
+                                            key={index}
+                                            className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 text-xs sm:text-sm font-bold text-slate-400 select-none"
+                                        >
+                                            …
+                                        </span>
+                                    );
+                                }
+
+                                const content = isPrev ? (
+                                    <span className="flex items-center gap-1">
+                                        <ChevronLeft className="w-4 h-4" />
+                                        <span className="hidden sm:inline text-xs sm:text-sm">Previous</span>
+                                    </span>
+                                ) : isNext ? (
+                                    <span className="flex items-center gap-1">
+                                        <span className="hidden sm:inline text-xs sm:text-sm">Next</span>
+                                        <ChevronRight className="w-4 h-4" />
+                                    </span>
+                                ) : (
+                                    <span dangerouslySetInnerHTML={{ __html: link.label }} />
+                                );
+
+                                const baseClasses = `inline-flex items-center justify-center font-bold text-xs sm:text-sm rounded-xl transition-all select-none ${
+                                    isPrev || isNext ? 'px-2.5 sm:px-4 h-8 sm:h-10' : 'w-8 h-8 sm:w-10 sm:h-10'
+                                }`;
+
+                                if (!link.url) {
+                                    return (
+                                        <span
+                                            key={index}
+                                            aria-disabled="true"
+                                            className={`${baseClasses} text-slate-300 border border-slate-200/60 bg-slate-50 cursor-not-allowed`}
+                                        >
+                                            {content}
+                                        </span>
+                                    );
+                                }
+
+                                if (link.active) {
+                                    return (
+                                        <span
+                                            key={index}
+                                            aria-current="page"
+                                            className={`${baseClasses} bg-blue-900 text-white shadow-md shadow-blue-900/20 font-extrabold`}
+                                        >
+                                            {content}
+                                        </span>
+                                    );
+                                }
+
+                                return (
+                                    <Link
+                                        key={index}
+                                        href={link.url}
+                                        preserveScroll={false}
+                                        preserveState
+                                        className={`${baseClasses} bg-white text-slate-700 hover:bg-slate-50 hover:text-blue-900 border border-slate-200 hover:border-slate-300 shadow-sm`}
+                                    >
+                                        {content}
+                                    </Link>
+                                );
+                            })}
+                        </nav>
+                    </div>
+                )}
+
+                {properties.total > 0 && properties.last_page <= 1 && (
+                    <div className="mt-10 pt-6 border-t border-slate-200/60 text-center">
+                        <p className="text-xs sm:text-sm font-medium text-slate-400">
+                            Showing all {properties.total} propert{properties.total === 1 ? 'y' : 'ies'}
+                        </p>
                     </div>
                 )}
             </main>
