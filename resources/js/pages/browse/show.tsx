@@ -9,6 +9,16 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+import PublicHeader from '@/components/public-header';
+
+const headerCategories = [
+    { name: 'Residential', query: 'residential' },
+    { name: 'Commercial', query: 'commercial' },
+    { name: 'Apartment', query: 'residential' },
+    { name: 'Industrial', query: 'commercial' },
+    { name: 'Building Code', query: 'commercial' },
+];
+
 export default function BrowseShow({ property }: any) {
     const { auth } = usePage().props as any;
     const { post, processing } = useForm();
@@ -95,43 +105,36 @@ export default function BrowseShow({ property }: any) {
         <div className="antialiased bg-[#F8FAFC] text-slate-900 min-h-screen font-sans pb-28 md:pb-16">
             <Head title={`${property.title} — Rentify Escrow`} />
 
-            {/* Navigation Bar */}
-            <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-slate-200/70 shadow-xs">
-                <div className="max-w-7xl mx-auto px-4 md:px-8 h-20 flex items-center justify-between">
-                    <div className="flex items-center gap-4 sm:gap-6">
-                        <Link 
-                            href="/browse" 
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
-                        >
-                            <ChevronLeft className="w-4 h-4" />
-                            <span>Browse</span>
-                        </Link>
-                        
-                        <Link href="/" className="flex items-center gap-2 text-xl font-extrabold tracking-tight text-blue-900">
-                            <div className="w-8 h-8 bg-blue-900 rounded-lg flex items-center justify-center shadow-inner">
-                                <ShieldCheck className="text-white w-4.5 h-4.5" />
-                            </div>
-                            Rent<span className="text-amber-500">ify</span>
-                        </Link>
-                    </div>
+            {/* Global Public Header */}
+            <PublicHeader categories={headerCategories} />
 
-                    {/* Right action tools */}
+            <main className="max-w-7xl mx-auto px-4 md:px-8 pt-24 sm:pt-28 pb-28 md:pb-16">
+                {/* Action Toolbar Row: Back button on Left, Share & Save on Right */}
+                <div className="flex items-center justify-between gap-3 mb-5 sm:mb-6">
+                    <Link 
+                        href="/browse" 
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs sm:text-sm transition-all shadow-2xs hover:text-blue-900 shrink-0"
+                    >
+                        <ChevronLeft className="w-4 h-4 text-slate-500" />
+                        <span>Back to Browse</span>
+                    </Link>
+
                     <div className="flex items-center gap-2 sm:gap-3">
                         <button 
                             onClick={handleCopyLink}
                             type="button"
-                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold transition-all shadow-xs"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-bold transition-all shadow-2xs cursor-pointer"
                             title="Share property link"
                         >
                             {copied ? (
                                 <>
                                     <Check className="w-4 h-4 text-emerald-600" />
-                                    <span className="text-emerald-700 hidden sm:inline">Copied!</span>
+                                    <span className="text-emerald-700">Copied!</span>
                                 </>
                             ) : (
                                 <>
                                     <Share2 className="w-4 h-4 text-slate-600" />
-                                    <span className="hidden sm:inline">Share</span>
+                                    <span>Share</span>
                                 </>
                             )}
                         </button>
@@ -139,7 +142,7 @@ export default function BrowseShow({ property }: any) {
                         <button 
                             onClick={() => setIsSaved(!isSaved)}
                             type="button"
-                            className={`p-2 sm:px-3 sm:py-2 rounded-full border text-xs sm:text-sm font-bold transition-all inline-flex items-center gap-1.5 shadow-xs ${
+                            className={`px-3.5 py-2 rounded-full border text-xs sm:text-sm font-bold transition-all inline-flex items-center gap-1.5 shadow-2xs cursor-pointer ${
                                 isSaved 
                                     ? 'border-red-200 bg-red-50 text-red-600' 
                                     : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
@@ -147,30 +150,11 @@ export default function BrowseShow({ property }: any) {
                             title="Save to favorites"
                         >
                             <Heart className={`w-4 h-4 ${isSaved ? 'fill-red-600 text-red-600' : 'text-slate-600'}`} />
-                            <span className="hidden sm:inline">{isSaved ? 'Saved' : 'Save'}</span>
+                            <span>{isSaved ? 'Saved' : 'Save'}</span>
                         </button>
-
-                        <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
-
-                        {auth?.user ? (
-                            <Link href={dashboard()} className="bg-blue-900 text-white px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold hover:bg-blue-800 transition-all shadow-md shadow-blue-900/20">
-                                Dashboard
-                            </Link>
-                        ) : (
-                            <div className="flex items-center gap-2">
-                                <Link href={login()} className="hidden md:block text-xs sm:text-sm font-bold text-slate-600 hover:text-blue-900 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">
-                                    Log In
-                                </Link>
-                                <Link href={register()} className="bg-blue-900 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold hover:bg-blue-800 transition-all shadow-md shadow-blue-900/20">
-                                    Sign Up
-                                </Link>
-                            </div>
-                        )}
                     </div>
                 </div>
-            </header>
 
-            <main className="max-w-7xl mx-auto px-4 md:px-8 pt-6 sm:pt-8">
                 {/* Breadcrumbs */}
                 <nav className="flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-500 mb-5 overflow-hidden">
                     <Link href="/" className="hover:text-blue-900 transition-colors shrink-0">Home</Link>
