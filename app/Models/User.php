@@ -27,7 +27,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'role'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements PasskeyUser
 {
@@ -62,16 +62,34 @@ class User extends Authenticatable implements PasskeyUser
 
     public function hasRole(string $role): bool
     {
+        if (($this->role ?? null) === $role) {
+            return true;
+        }
+
         return $this->roles()->where('name', $role)->exists();
     }
 
     public function hasAnyRole(array $roles): bool
     {
+        if (in_array($this->role ?? null, $roles)) {
+            return true;
+        }
+
         return $this->roles()->whereIn('name', $roles)->exists();
     }
 
     public function properties()
     {
         return $this->hasMany(Property::class);
+    }
+
+    public function inspectionsAsTenant()
+    {
+        return $this->hasMany(InspectionBooking::class, 'tenant_id');
+    }
+
+    public function inspectionsAsAgent()
+    {
+        return $this->hasMany(InspectionBooking::class, 'agent_id');
     }
 }

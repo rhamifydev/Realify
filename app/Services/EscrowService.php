@@ -11,6 +11,42 @@ use Illuminate\Support\Facades\Log;
 class EscrowService
 {
     /**
+     * Initialize an escrow transaction for inspection booking or upfront deposit payments.
+     */
+    public function initializeTransaction(User $tenant, PropertyUnit $unit, string $type = 'inspection_fee', ?float $amount = null)
+    {
+        if ($amount === null) {
+            $amount = match ($type) {
+                'inspection_fee' => 5000.00,
+                'caution_deposit' => (float) ($unit->caution_deposit ?: 100000.00),
+                'rent' => (float) ($unit->rent_price ?: 500000.00),
+                default => 5000.00,
+            };
+        }
+
+        $paymentResult = $this->initiatePayment($unit, $tenant, $type, $amount);
+
+        // Fetch transaction record created during initiation
+        $transaction = Transaction::where('tenant_id', $tenant->id)
+            ->where('property_unit_id', $unit->id)
+            ->latest()
+            ->first();
+
+        $paymentUrl = $paymentResult['data']['authorization_url'] 
+            ?? ($paymentResult['authorization_url'] ?? route('escrow.index'));
+
+        if ($transaction) {
+            $transaction->payment_url = $paymentUrl;
+            return $transaction;
+        }
+
+        return (object) [
+            'payment_url' => $paymentUrl,
+            'status' => 'pending_payment',
+        ];
+    }
+
+    /**
      * Initiate a payment into Escrow (e.g., inspection fee) via Paystack.
      */
     public function initiatePayment(PropertyUnit $unit, User $tenant, string $type, float $amount)

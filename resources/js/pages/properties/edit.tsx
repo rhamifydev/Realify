@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import PropertyAvailabilityManager from '@/components/property-availability-manager';
 
 export default function PropertyEdit({ property }: { property: any }) {
     const breadcrumbs: BreadcrumbItem[] = [
@@ -181,6 +182,14 @@ export default function PropertyEdit({ property }: { property: any }) {
                             </Button>
                         </div>
                     </form>
+
+                    {/* Inspection Slot Availability Configuration */}
+                    <div className="mt-8">
+                        <PropertyAvailabilityManager
+                            propertyId={property.id}
+                            initialSchedules={property.availabilities || []}
+                        />
+                    </div>
 
                 </div>
             </div>

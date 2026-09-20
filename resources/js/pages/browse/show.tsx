@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
 import { dashboard, login, register } from '@/routes';
 import { 
     ShieldCheck, MapPin, CheckCircle2, Bed, Bath, Home, ChevronLeft, ChevronRight, 
@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 import PublicHeader from '@/components/public-header';
+import InspectionBookingModal from '@/components/inspection-booking-modal';
 
 const headerCategories = [
     { name: 'Residential', query: 'residential' },
@@ -62,8 +63,15 @@ export default function BrowseShow({ property }: any) {
         setTimeout(() => setCopied(false), 2500);
     };
 
+    // Booking modal state
+    const [bookingModalOpen, setBookingModalOpen] = useState(false);
+
     const handleBook = () => {
-        post(`/browse/${property.id}/book`);
+        if (!auth?.user) {
+            router.visit(login());
+            return;
+        }
+        setBookingModalOpen(true);
     };
 
     // Keyboard navigation for lightbox
@@ -635,10 +643,10 @@ export default function BrowseShow({ property }: any) {
                                     {/* Booking CTA Button */}
                                     <Button 
                                         onClick={handleBook} 
-                                        disabled={processing}
                                         className="w-full h-13 sm:h-14 bg-blue-900 hover:bg-blue-800 text-white rounded-2xl text-base font-bold shadow-lg shadow-blue-900/20 transition-all active:scale-[0.99] cursor-pointer"
                                     >
-                                        {processing ? 'Connecting to Escrow...' : 'Book Inspection (₦5,000)'}
+                                        <Calendar className="mr-2 h-5 w-5" />
+                                        Schedule Inspection (Choose Slot)
                                     </Button>
 
                                     <div className="mt-4 flex items-center justify-center gap-2 text-xs font-semibold text-slate-500 text-center">
@@ -759,6 +767,14 @@ export default function BrowseShow({ property }: any) {
                     </div>
                 </div>
             )}
+
+            {/* Inspection Booking Modal */}
+            <InspectionBookingModal
+                isOpen={bookingModalOpen}
+                onClose={() => setBookingModalOpen(false)}
+                property={property}
+                activeUnitId={activeUnit?.id}
+            />
         </div>
     );
 }

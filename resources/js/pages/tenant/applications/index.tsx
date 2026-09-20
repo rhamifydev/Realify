@@ -36,9 +36,11 @@ export default function TenantApplications() {
                         <div className="mt-8 bg-white p-6 rounded-2xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
                             <div>
                                 <h4 className="font-bold text-slate-900">Next Step: Attend Inspection</h4>
-                                <p className="text-sm text-slate-500">Your inspection is scheduled for Tomorrow at 10:00 AM.</p>
+                                <p className="text-sm text-slate-500">Check your verified viewing time in the Inspection Hub.</p>
                             </div>
-                            <Button className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-full">Confirm Inspection Held</Button>
+                            <Button asChild className="bg-blue-900 hover:bg-blue-800 text-white rounded-full">
+                                <a href="/tenant/inspections">View Inspection Hub</a>
+                            </Button>
                         </div>
                     </div>
                 </div>

@@ -38,7 +38,7 @@ class PropertyController extends Controller
             abort(403);
         }
 
-        $property->load(['units', 'media']);
+        $property->load(['units', 'media', 'availabilities']);
 
         return Inertia::render('properties/edit', [
             'property' => $property

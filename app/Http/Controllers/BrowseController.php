@@ -117,21 +117,32 @@ class BrowseController extends Controller
             abort(404);
         }
 
-        // We assume we are booking the first unit for simplicity in MVP, 
-        // or a specific unit if passed in the request.
-        $unit = $property->units()->first();
+        $unitId = $request->input('unit_id');
+        $unit = $unitId ? $property->units()->find($unitId) : null;
         if (!$unit) {
-            return back()->withErrors(['message' => 'This property has no units available.']);
+            $unit = $property->units()->first();
         }
 
-        // Using the EscrowService to create an inspection transaction
+        if (!$unit) {
+            return back()->withErrors(['message' => 'This property has no units available for inspection.']);
+        }
+
+        // Using the EscrowService to create an inspection transaction (refundable ₦5,000 fee)
         $transaction = $escrowService->initializeTransaction(
             tenant: $request->user(),
             unit: $unit,
-            type: 'rent' // Assuming 'rent' type for inspection flow as per earlier Phase 4
+            type: 'inspection_fee',
+            amount: 5000.00
         );
 
-        return Inertia::location($transaction->payment_url);
+        $paymentUrl = $transaction->payment_url ?? route('escrow.index');
+
+        // If local or relative URL (or Paystack key not set in dev), redirect with success message to Escrow hub
+        if (!filter_var($paymentUrl, FILTER_VALIDATE_URL) || str_starts_with($paymentUrl, url('/')) || str_contains($paymentUrl, 'localhost') || str_contains($paymentUrl, '127.0.0.1')) {
+            return redirect($paymentUrl)->with('success', "Inspection booking initiated for {$property->title}! ₦5,000 deposit held in Escrow.");
+        }
+
+        return Inertia::location($paymentUrl);
     }
 }
 

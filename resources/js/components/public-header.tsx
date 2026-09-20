@@ -8,6 +8,7 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
+import { NotificationBell } from '@/components/notification-bell';
 
 export interface PublicHeaderCategory {
     name: string;
@@ -49,9 +50,12 @@ export default function PublicHeader({ categories = [] }: Props) {
 
                 <div className="hidden lg:flex items-center gap-4">
                     {auth?.user ? (
-                        <Link href={dashboard()} className="bg-blue-900 text-white px-7 py-2.5 rounded-full text-sm font-bold hover:bg-blue-800 transition-all shadow-lg shadow-blue-900/20 hover:shadow-blue-900/40 hover:-translate-y-0.5 active:translate-y-0">
-                            Go to Dashboard
-                        </Link>
+                        <div className="flex items-center gap-3">
+                            <NotificationBell />
+                            <Link href={dashboard()} className="bg-blue-900 text-white px-7 py-2.5 rounded-full text-sm font-bold hover:bg-blue-800 transition-all shadow-lg shadow-blue-900/20 hover:shadow-blue-900/40 hover:-translate-y-0.5 active:translate-y-0">
+                                Go to Dashboard
+                            </Link>
+                        </div>
                     ) : (
                         <>
                             <Link href={login()} className="text-sm font-bold text-slate-600 hover:text-blue-900 transition-colors px-3 py-2 rounded-lg hover:bg-slate-50">Log In</Link>
@@ -62,7 +66,8 @@ export default function PublicHeader({ categories = [] }: Props) {
                     )}
                 </div>
 
-                <div className="lg:hidden flex items-center">
+                <div className="lg:hidden flex items-center gap-2">
+                    {auth?.user && <NotificationBell />}
                     <Sheet>
                         <SheetTrigger className="p-2 -mr-2 text-slate-900 hover:bg-slate-100 rounded-lg transition-colors">
                             <Menu className="w-7 h-7" />

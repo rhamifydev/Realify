@@ -3,38 +3,59 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Transaction;
 
 class DisputeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $disputes = Transaction::with(['propertyUnit.property', 'tenant'])
-            ->where('status', 'disputed')
-            ->latest()
-            ->get();
+        $status = $request->query('status', 'disputed');
+
+        $query = Transaction::with(['propertyUnit.property.user', 'tenant'])->latest();
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $disputes = $query->paginate(15)->withQueryString();
+
+        $counts = [
+            'disputed' => Transaction::where('status', 'disputed')->count(),
+            'released' => Transaction::where('status', 'released')->count(),
+            'refunded' => Transaction::where('status', 'refunded')->count(),
+            'all' => Transaction::whereIn('status', ['disputed', 'released', 'refunded'])->count(),
+        ];
 
         return Inertia::render('admin/disputes', [
-            'disputes' => $disputes
+            'disputes' => $disputes,
+            'currentStatus' => $status,
+            'counts' => $counts,
         ]);
     }
 
     public function resolve(Request $request, Transaction $transaction)
     {
         $validated = $request->validate([
-            'resolution' => 'required|in:released,refunded'
+            'resolution' => 'required|in:released,refunded',
+            'notes' => 'nullable|string|max:500',
         ]);
 
         if ($transaction->status !== 'disputed') {
-            abort(400, 'Transaction is not currently disputed.');
+            return redirect()->back()->withErrors([
+                'msg' => 'Transaction is not currently in disputed status.',
+            ]);
         }
 
-        $transaction->update(['status' => $validated['resolution']]);
+        $transaction->update([
+            'status' => $validated['resolution'],
+        ]);
 
-        // Real app: we would process the refund via Paystack or transfer to the agent.
+        $message = $validated['resolution'] === 'released'
+            ? 'Dispute resolved: ₦' . number_format($transaction->amount, 2) . ' released to property owner.'
+            : 'Dispute resolved: ₦' . number_format($transaction->amount, 2) . ' refunded back to tenant.';
 
-        return redirect()->back()->with('success', 'Dispute resolved successfully.');
+        return redirect()->back()->with('success', $message);
     }
 }

@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { ShieldCheck } from 'lucide-react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
@@ -16,18 +17,26 @@ type Props = {
 export default function Register({ passwordRules }: Props) {
     return (
         <>
-            <Head title="Register" />
+            <Head title="Create Account" />
+
+            <div className="mb-5 flex items-center gap-2.5 rounded-xl border border-blue-600/15 bg-blue-50/70 p-3 text-xs text-blue-900 dark:bg-blue-950/30 dark:border-blue-500/20 dark:text-blue-300">
+                <ShieldCheck className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400" />
+                <span>Deposits held in licensed escrow until physical inspection.</span>
+            </div>
+
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
                 disableWhileProcessing
-                className="flex flex-col gap-6"
+                className="flex flex-col gap-4"
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
+                        <div className="grid gap-4">
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                                    Full name
+                                </Label>
                                 <Input
                                     id="name"
                                     type="text"
@@ -36,16 +45,19 @@ export default function Register({ passwordRules }: Props) {
                                     tabIndex={1}
                                     autoComplete="name"
                                     name="name"
-                                    placeholder="Full name"
+                                    placeholder="e.g. Babatunde Adeleke"
+                                    className="h-11 rounded-xl border-slate-200 bg-slate-50/50 px-3.5 text-sm transition-all focus:bg-white focus:border-blue-700 focus:ring-4 focus:ring-blue-700/10 dark:border-zinc-700 dark:bg-zinc-800/60"
                                 />
                                 <InputError
                                     message={errors.name}
-                                    className="mt-2"
+                                    className="mt-1"
                                 />
                             </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                                    Email address
+                                </Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -53,27 +65,31 @@ export default function Register({ passwordRules }: Props) {
                                     tabIndex={2}
                                     autoComplete="email"
                                     name="email"
-                                    placeholder="email@example.com"
+                                    placeholder="name@company.com"
+                                    className="h-11 rounded-xl border-slate-200 bg-slate-50/50 px-3.5 text-sm transition-all focus:bg-white focus:border-blue-700 focus:ring-4 focus:ring-blue-700/10 dark:border-zinc-700 dark:bg-zinc-800/60"
                                 />
-                                <InputError message={errors.email} />
+                                <InputError message={errors.email} className="mt-1" />
                             </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+                                    Password
+                                </Label>
                                 <PasswordInput
                                     id="password"
                                     required
                                     tabIndex={3}
                                     autoComplete="new-password"
                                     name="password"
-                                    placeholder="Password"
+                                    placeholder="Create secure password"
                                     passwordrules={passwordRules}
+                                    className="h-11 rounded-xl border-slate-200 bg-slate-50/50 px-3.5 text-sm transition-all focus:bg-white focus:border-blue-700 focus:ring-4 focus:ring-blue-700/10 dark:border-zinc-700 dark:bg-zinc-800/60"
                                 />
-                                <InputError message={errors.password} />
+                                <InputError message={errors.password} className="mt-1" />
                             </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="password_confirmation" className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                                     Confirm password
                                 </Label>
                                 <PasswordInput
@@ -82,29 +98,39 @@ export default function Register({ passwordRules }: Props) {
                                     tabIndex={4}
                                     autoComplete="new-password"
                                     name="password_confirmation"
-                                    placeholder="Confirm password"
+                                    placeholder="Re-enter password"
                                     passwordrules={passwordRules}
+                                    className="h-11 rounded-xl border-slate-200 bg-slate-50/50 px-3.5 text-sm transition-all focus:bg-white focus:border-blue-700 focus:ring-4 focus:ring-blue-700/10 dark:border-zinc-700 dark:bg-zinc-800/60"
                                 />
                                 <InputError
                                     message={errors.password_confirmation}
+                                    className="mt-1"
                                 />
+                            </div>
+
+                            <div className="pt-1">
+                                <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                                    By registering, you agree to Rentify's{' '}
+                                    <span className="font-semibold text-slate-700 dark:text-slate-300">Escrow Terms of Service</span> &{' '}
+                                    <span className="font-semibold text-slate-700 dark:text-slate-300">Privacy Policy</span>.
+                                </p>
                             </div>
 
                             <Button
                                 type="submit"
-                                className="mt-2 w-full"
+                                className="mt-1 h-11 w-full rounded-xl bg-blue-900 text-sm font-bold text-white shadow-md shadow-blue-900/15 transition-all hover:bg-blue-800 hover:shadow-lg disabled:opacity-50 cursor-pointer"
                                 tabIndex={5}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
-                                Create account
+                                Create Free Account
                             </Button>
                         </div>
 
-                        <div className="text-center text-sm text-muted-foreground">
+                        <div className="pt-2 text-center text-xs text-slate-500 dark:text-slate-400">
                             Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={6}>
-                                Log in
+                            <TextLink href={login()} tabIndex={6} className="font-bold text-blue-900 hover:text-blue-700 dark:text-blue-400 underline decoration-blue-900/20">
+                                Sign in
                             </TextLink>
                         </div>
                     </>
@@ -115,6 +141,6 @@ export default function Register({ passwordRules }: Props) {
 }
 
 Register.layout = {
-    title: 'Create an account',
-    description: 'Enter your details below to create your account',
+    title: 'Create Account',
+    description: 'Join verified tenants & landlords using escrow-protected renting.',
 };

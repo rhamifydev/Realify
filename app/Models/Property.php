@@ -29,6 +29,16 @@ class Property extends Model
         return $this->hasMany(PropertyMedia::class);
     }
 
+    public function availabilities()
+    {
+        return $this->hasMany(PropertyAvailability::class);
+    }
+
+    public function inspectionBookings()
+    {
+        return $this->hasMany(InspectionBooking::class);
+    }
+
     /**
      * Scope to order properties by distance from a given coordinate.
      * Uses the Haversine formula to compute distance in kilometers.
